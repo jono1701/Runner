@@ -17,20 +17,23 @@ ZenvaRunner.Game = function() {
     this.coinSpacingY = 10;
     
     this.playerAlive = true;
+    
+    this.musicVolume = 1;
+    this.sfxVolume = 1;
 };
 
 ZenvaRunner.Game.prototype = {
     create: function() {
         this.game.world.bounds = new Phaser.Rectangle(0, 0, this.game.width + 300, this.game.height);
         
-        this.background = this.game.add.tileSprite(0, 0, this.game.width,512,'background');
-        this.background.autoScroll(-100,0);
+        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
+        this.background.autoScroll(-25,0);
       
-        this.foreground = this.game.add.tileSprite(0,470,this.game.width,this.game.height - 533,'foreground');
-        this.foreground.autoScroll(-100,0);
+        this.foreground = this.game.add.tileSprite(0,0,this.game.width,this.game.height ,'foreground');
+        this.foreground.autoScroll(-45,0);
       
-        this.ground = this.game.add.tileSprite(0,this.game.height - 73, this.game.width,73,'ground');
-        this.ground.autoScroll(-400,0);
+        this.ground = this.game.add.tileSprite(0,this.game.height-49, this.game.width,49,'ground');
+        this.ground.autoScroll(-75,0);
       
         this.player = this.add.sprite(200,this.game.height/2,'player');
         this.player.anchor.setTo(0.5);
@@ -48,13 +51,24 @@ ZenvaRunner.Game.prototype = {
         
         this.game.physics.arcade.enableBody(this.player);
         this.player.body.collideWorldBounds = true;
+        this.player.body.setSize((this.player.width * 0.8) * 5, (this.player.height * 0.8) * 5);
         this.player.body.bounce.set(0.25);
         
         this.coins = this.game.add.group();
         this.enemies = this.game.add.group();
-        
-        this.scoreText = this.game.add.bitmapText(10,10,'minecraftia','Score: 0',24);
-        this.enemyTimerText = this.game.add.bitmapText(300,10,'minecraftia','Timer: '+this.enemyRate,24);
+
+        //this.scoreText = this.game.add.bitmapText(10,10,'minecraftia','Score: 0',24);
+        this.scoreText = this.game.add.text(10,10,'Score: 0',{
+            font: '24px Arial Black',
+            fill: '#ffffff',
+            strokeThickness: 4
+        });
+        //this.enemyTimerText = this.game.add.bitmapText(300,10,'minecraftia','Timer: '+this.enemyRate,24);
+        this.enemyTimerText = this.game.add.text(300,10,'Timer: '+this.enemyRate,{
+            font: '24px Arial Black',
+            fill: '#ffffff',
+            strokeThickness: 4
+        });
         
         this.jetSound = this.game.add.audio('rocket');
         this.coinSound = this.game.add.audio('coin');
@@ -195,7 +209,7 @@ ZenvaRunner.Game.prototype = {
     },
     createEnemy: function() {
         var x = this.game.width;
-        var y = this.game.rnd.integerInRange(50, this.game.world.height - 150);
+        var y = this.game.rnd.integerInRange(50, this.game.world.height - 50);
         
         var enemy = this.enemies.getFirstExists(false);
         if(!enemy) {

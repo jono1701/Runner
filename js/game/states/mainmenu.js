@@ -2,14 +2,14 @@ ZenvaRunner.MainMenu = function() {};
 
 ZenvaRunner.MainMenu.prototype = {
   create: function() {
-      this.background = this.game.add.tileSprite(0, 0, this.game.width,512,'background');
-      this.background.autoScroll(-100,0);
+      this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
+      this.background.autoScroll(-25,0);
       
-      this.foreground = this.game.add.tileSprite(0,470,this.game.width,this.game.height - 533,'foreground');
-      this.foreground.autoScroll(-100,0);
+      this.foreground = this.game.add.tileSprite(0,0,this.game.width,this.game.height ,'foreground');
+      this.foreground.autoScroll(-40,0);
       
-      this.ground = this.game.add.tileSprite(0,this.game.height - 73, this.game.width,73,'ground');
-      this.ground.autoScroll(-400,0);
+      this.ground = this.game.add.tileSprite(0,this.game.height-49, this.game.width,49,'ground');
+      this.ground.autoScroll(-75,0);
       
       this.player = this.add.sprite(200,this.game.height/2,'player');
       this.player.anchor.setTo(0.5);
@@ -23,14 +23,43 @@ ZenvaRunner.MainMenu.prototype = {
       this.splash = this.add.sprite(this.game.world.centerX,this.game.world.centerY,'logo');
       this.splash.anchor.setTo(0.5);
       
-      this.startText = this.game.add.bitmapText(0,0,'minecraftia','Tap to start',32);
-      this.startText.x = this.game.width / 2 - this.startText.textWidth / 2;
+      this.versionText = this.game.add.text(0, 0, 'v1.0', {
+          font: '10px Arial Black',
+          fill: '#ffffff',
+          strokeThickness: 4
+      });
+      this.versionText.y = this.game.height - 20;
+      
+      this.startText = this.game.add.text(0, 0, 'Start', {
+        font: '32px Arial Black', 
+        fill: '#ffffff', 
+        strokeThickness: 4
+      });
+      this.startText.x = this.game.width / 2 - this.startText.width / 2;
       this.startText.y = this.game.height / 2 + this.splash.height / 2;
+      
+      this.startText.inputEnabled = true;
+      this.startText.events.onInputDown.add(this.startGame, this);
+      
+      this.settingsText = this.game.add.text(0, 0, 'Settings', {
+          font: '25px Arial Black',
+          fill: '#ffffff',
+          strokeThickness: 4
+      });
+      this.settingsText.x = this.game.width / 2 - this.settingsText.width / 2;
+      this.settingsText.y = this.game.height - 60;
+      
+      this.settingsText.inputEnabled = true;
+      this.settingsText.events.onInputDown.add(this.settingsPage, this);
         
   },
   update: function() {
-      if(this.game.input.activePointer.justPressed()) {
-          this.game.state.start('Game');
-      }
+
+  },
+  startGame: function() {
+      this.game.state.start('Game');
+  },
+  settingsPage: function() {
+      this.game.state.start('Settings');
   }
 };

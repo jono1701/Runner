@@ -12,24 +12,27 @@ ZenvaRunner.Preload.prototype = {
         this.preloadBar.anchor.setTo(0.5);
         
         this.load.setPreloadSprite(this.preloadBar);
-          
-        this.load.image('ground','assets/images/ground.png');
-        this.load.image('background','assets/images/background.png');
-        this.load.image('foreground','assets/images/foreground.png');
+
+        this.load.image('ground','assets/images/background/layer_3b.png');
+        this.load.image('background','assets/images/background/layer_1.png');
+        this.load.image('foreground','assets/images/background/layer_2.png');
         
         this.load.spritesheet('coins','assets/images/coins-ps.png', 51, 51, 7);
         this.load.spritesheet('player','assets/images/jetpack-ps.png', 229, 296, 4);
-        this.load.spritesheet('missile','assets/images/missiles-ps.png', 361, 218, 4);
+        this.load.spritesheet('missile','assets/images/enemy/enemy.png', 364, 233, 5);
         
         this.load.audio('gameMusic',['assets/audio/Pamgaea.mp3','assets/audio/Pamgaea.ogg']);
         this.load.audio('rocket','assets/audio/rocket.wav');
         this.load.audio('bounce','assets/audio/bounce.wav');
         this.load.audio('coin','assets/audio/coin.wav');
         this.load.audio('death','assets/audio/death.wav');
-        
-        this.load.bitmapFont('minecraftia','assets/fonts/minecraftia/minecraftia.png','assets/fonts/minecraftia/minecraftia.xml');
-        
+             
         this.load.onLoadComplete.add(this.onLoadComplete,this);
+        
+        //var gameSettings = JSON.parse(localStorage.getItem('gameSettings') || {"sfxVol": 10, "musicVol": 10});
+        var gameSettings = localStorage.getItem('gameSettings') || {"sfxVol": 10, "musicVol": 10};
+        this.game.global.sfxVol = (gameSettings.sfxVol == null || gameSettings.sfxVol === undefined || gameSettings.sfxVol.length <= 0) ? 10 : gameSettings.sfxVol;
+        this.game.global.musicVol = (gameSettings.musicVol == null || gameSettings.musicVol === undefined || gameSettings.musicVol.length <= 0) ? 10 : gameSettings.musicVol;
     },
     create: function(){
         

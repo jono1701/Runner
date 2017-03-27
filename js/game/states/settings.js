@@ -107,6 +107,7 @@ ZenvaRunner.Settings.prototype = {
 
   },
   update: function() {
+
   },
   cancelSettings: function() {
       this.state.start('MainMenu');
@@ -119,14 +120,42 @@ ZenvaRunner.Settings.prototype = {
   },
   increaseSfx: function() {
       this.sfxValue.text++;
+      if(this.sfxValue.text == '10') {
+          this.incSfx.visible = false;
+          this.decSfx.visible = true;
+      } else {
+          this.incSfx.visible = true;
+          this.decSfx.visible = true;
+      }
   },
   decreaseSfx: function() {
       this.sfxValue.text--;
+      if(this.sfxValue.text == '0') {
+          this.decSfx.visible = false;
+          this.incSfx.visible = true;
+      } else {
+          this.incSfx.visible = true;
+          this.decSfx.visible = true;
+      }
   },
   increaseMusic: function() {
       this.musicValue.text++;
+      if(this.musicValue.text == '10') {
+          this.incMusic.visible = false;
+          this.decMusic.visible = true;
+      } else {
+          this.incMusic.visible = true;
+          this.decMusic.visible = true;
+      }
   },
   decreaseMusic: function() {
       this.musicValue.text--;
+      if(this.musicValue.text == '0') {
+          this.decMusic.visible = false;
+          this.incMusic.visible = true;
+      } else {
+          this.incMusic.visible = true;
+          this.decMusic.visible = true;
+      }
   }
 };

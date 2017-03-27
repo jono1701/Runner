@@ -74,7 +74,7 @@ ZenvaRunner.Game.prototype = {
         this.coinSound = this.game.add.audio('coin');
         this.deathSound = this.game.add.audio('death');
         this.gameMusic = this.game.add.audio('gameMusic');
-        this.gameMusic.play('', 0, true);
+        this.gameMusic.play('', 0, true,1 * (this.game.global.musicVol / 10));
         
         this.coinSpawnX = this.game.width + 64;
     },
@@ -86,7 +86,7 @@ ZenvaRunner.Game.prototype = {
             if(this.game.input.activePointer.isDown){
                 this.player.body.velocity.y -= 25;
                 if(!this.jetSound.isPlaying) {
-                    this.jetSound.play('', 0, true, 0.5);
+                    this.jetSound.play('', 0, true, 0.5 * (this.game.global.sfxVol / 10));
                 }
             } else {
                 this.jetSound.stop();
@@ -225,7 +225,7 @@ ZenvaRunner.Game.prototype = {
     },
     coinHit: function(player, coin) {
         this.score++;
-        this.coinSound.play();
+        this.coinSound.play('',0,false,0.5 * (this.game.global.sfxVol / 10));
         coin.kill();
         
         var dummyCoin = new Coin(this.game, coin.x, coin.y);
@@ -255,7 +255,7 @@ ZenvaRunner.Game.prototype = {
             player.kill();
             enemy.kill();
 
-            this.deathSound.play('', 0, false, 0.5);
+            this.deathSound.play('', 0, false, 0.5 * (this.game.global.sfxVol / 10));
             this.gameMusic.stop();
             this.jetSound.stop();
 

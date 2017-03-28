@@ -104,6 +104,16 @@ ZenvaRunner.Settings.prototype = {
       this.cancelText.y = this.game.height - 40;
       this.cancelText.inputEnabled = true;
       this.cancelText.events.onInputDown.add(this.cancelSettings, this);
+      
+      this.creditsText = this.game.add.text(0,0,'Credits',{
+          font: '18px Arial Black',
+          fill: '#ffffff',
+          strokeThickness :4
+      });
+      this.creditsText.x = this.game.width / 2 - this.creditsText.width / 2;
+      this.creditsText.y = this.game.height - 80;
+      this.creditsText.inputEnabled = true;
+      this.creditsText.events.onInputDown.add(this.showCredits,this);
 
   },
   update: function() {
@@ -157,5 +167,9 @@ ZenvaRunner.Settings.prototype = {
           this.incMusic.visible = true;
           this.decMusic.visible = true;
       }
+  },
+  showCredits: function() {
+      //this.state.start('Credits');
+      return;
   }
 };

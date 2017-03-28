@@ -9,6 +9,8 @@ ZenvaRunner.Game = function() {
     this.enemyTimer = 0;
     this.enemyIncreaseTimer = 0;
     
+    this.playTimer = 0;
+    
     this.score = 0;
     this.previousCoinType = null;
     
@@ -18,8 +20,10 @@ ZenvaRunner.Game = function() {
     
     this.playerAlive = true;
     
-    this.musicVolume = 1;
-    this.sfxVolume = 1;
+    //this.musicVolume = 1;
+    //this.sfxVolume = 1;
+    
+    this.playerHit = true;
 };
 
 ZenvaRunner.Game.prototype = {
@@ -57,14 +61,17 @@ ZenvaRunner.Game.prototype = {
         this.coins = this.game.add.group();
         this.enemies = this.game.add.group();
 
-        //this.scoreText = this.game.add.bitmapText(10,10,'minecraftia','Score: 0',24);
         this.scoreText = this.game.add.text(10,10,'Score: 0',{
             font: '24px Arial Black',
             fill: '#ffffff',
             strokeThickness: 4
         });
-        //this.enemyTimerText = this.game.add.bitmapText(300,10,'minecraftia','Timer: '+this.enemyRate,24);
-        this.enemyTimerText = this.game.add.text(300,10,'Timer: '+this.enemyRate,{
+        this.enemyTimerText = this.game.add.text(300,10,'Timer: '+this.enemyRate,{        
+            font: '24px Arial Black',
+            fill: '#ffffff',
+            strokeThickness: 4
+        });
+        this.playTimerText = this.game.add.text(500,10,'Time: '+this.playTimer,{
             font: '24px Arial Black',
             fill: '#ffffff',
             strokeThickness: 4
@@ -74,9 +81,10 @@ ZenvaRunner.Game.prototype = {
         this.coinSound = this.game.add.audio('coin');
         this.deathSound = this.game.add.audio('death');
         this.gameMusic = this.game.add.audio('gameMusic');
-        this.gameMusic.play('', 0, true,1 * (this.game.global.musicVol / 10));
+        this.gameMusic.play('', 0, true, 1 * (this.game.global.musicVol / 10));
         
         this.coinSpawnX = this.game.width + 64;
+        
     },
     update: function() {
         if(this.playerAlive) {
@@ -113,11 +121,6 @@ ZenvaRunner.Game.prototype = {
             if(this.enemyTimer < this.game.time.now) {
                 this.createEnemy();
                 this.enemyTimer = this.game.time.now + this.enemyRate;
-
-                //this.enemyRate -=10;
-                //if(this.enemyRate <= 250) {
-                //    this.enemyRate = 250;
-                //}
             }
             if(this.enemyIncreaseTimer < this.game.time.now) {
                 this.enemyIncreaseTimer = this.game.time.now + 10000;
@@ -128,6 +131,10 @@ ZenvaRunner.Game.prototype = {
                 }
                 
                 this.enemyTimerText.text = 'Timer: '+this.enemyRate;
+            }
+            if(this.playTimer < this.game.time.now) {
+                this.playTimerText.text = 'Time: ' + this.playTimer / 1000;
+                this.playTimer = this.game.time.now + 100;
             }
 
             this.game.physics.arcade.collide(this.player, this.ground, this.groundHit, null, this);
@@ -141,6 +148,7 @@ ZenvaRunner.Game.prototype = {
         this.score = 0;
         this.coinTimer = 0;
         this.enemyTimer = 0;
+        this.playTimer = 0;
         this.playerAlive = true;
         this.enemyRate = 1500;
     },
@@ -225,7 +233,7 @@ ZenvaRunner.Game.prototype = {
     },
     coinHit: function(player, coin) {
         this.score++;
-        this.coinSound.play('',0,false,0.5 * (this.game.global.sfxVol / 10));
+        this.coinSound.play('', 0, false, 0.5 * (this.game.global.sfxVol / 10));
         coin.kill();
         
         var dummyCoin = new Coin(this.game, coin.x, coin.y);
@@ -242,35 +250,66 @@ ZenvaRunner.Game.prototype = {
         
     },
     enemyHit: function(player,enemy) {
-        this.playerAlive = false;
-        
         if(navigator.vibrate) {
             navigator.vibrate(250);
         }
         
-        player.angle = 90;
-        var playerDeath = this.game.add.tween(player).to({y:this.game.height}, 700, Phaser.Easing.Linear.NONE, true);
-        
-        playerDeath.onComplete.add(function() {
-            player.kill();
+        if(this.score > 0 && this.playerHit) {
             enemy.kill();
+            
+            this.score = 0;
+            this.scoreText.text = 'Score: ' + this.score;
+            
+            this.playerHit = false;
+            
+            var emitter = this.game.add.emitter(this.player.x, this.player.y, 20);
+            emitter.makeParticles('particle-coin');
+            emitter.minParticleSpeed.setTo(-200, -200);
+            emitter.maxParticleSpeed.setTo(200, 200);
+            emitter.gravity = 400;
+            emitter.minParticleScale = 0.5;
+            emitter.maxParticleScale = 0.5;
+            emitter.kill();
+            emitter._quantity = 0;
+            emitter.start(true, 500, null, 20);
+            
+            var playerHit = this.game.add.tween(player).to({alpha:0},200, "Linear", true, 0, 3);
+            playerHit.yoyo(true,200);
+            playerHit.onComplete.add(function() {
+                this.player.alpha = 1;
+                this.playerHit = true;
+            },this);
+            
+        } else if(!this.playerHit) {
+    
+        } else {
+            this.playerAlive = false;
 
-            this.deathSound.play('', 0, false, 0.5 * (this.game.global.sfxVol / 10));
-            this.gameMusic.stop();
-            this.jetSound.stop();
+            player.angle = 90;
+            var playerDeath = this.game.add.tween(player).to({y:this.game.height}, 700, Phaser.Easing.Linear.NONE, true);
 
-            this.ground.stopScroll();
-            this.background.stopScroll();
-            this.foreground.stopScroll();
+            playerDeath.onComplete.add(function() {
+                player.kill();
+                enemy.kill();
 
-            this.enemies.setAll('body.velocity.x',0);
-            this.coins.setAll('body.velocity.x',0);
+                this.deathSound.play('', 0, false, 0.5 * (this.game.global.sfxVol / 10));
+                this.gameMusic.stop();
+                this.jetSound.stop();
 
-            this.enemyTimer = Number.MAX_VALUE;
-            this.coinTimer = Number.MAX_VALUE;
+                this.ground.stopScroll();
+                this.background.stopScroll();
+                this.foreground.stopScroll();
 
-            var scoreboard = new Scoreboard(this.game);
-            scoreboard.show(this.score);
-        },this);
+                this.enemies.setAll('body.velocity.x',0);
+                this.coins.setAll('body.velocity.x',0);
+
+                this.enemyTimer = Number.MAX_VALUE;
+                this.coinTimer = Number.MAX_VALUE;
+                this.playTimer = Number.MAX_VALUE;
+
+                var scoreboard = new Scoreboard(this.game);
+                scoreboard.show(this.score);
+            },this);
+        }
     }
 }

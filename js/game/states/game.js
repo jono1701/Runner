@@ -20,9 +20,6 @@ ZenvaRunner.Game = function() {
     
     this.playerAlive = true;
     
-    //this.musicVolume = 1;
-    //this.sfxVolume = 1;
-    
     this.playerHit = true;
 };
 
@@ -81,7 +78,9 @@ ZenvaRunner.Game.prototype = {
         this.coinSound = this.game.add.audio('coin');
         this.deathSound = this.game.add.audio('death');
         this.gameMusic = this.game.add.audio('gameMusic');
-        this.gameMusic.play('', 0, true, 1 * (this.game.global.musicVol / 10));
+        if(this.game.global.musicVol) {
+            this.gameMusic.play('', 0, true, 1);
+        }
         
         this.coinSpawnX = this.game.width + 64;
         
@@ -94,7 +93,9 @@ ZenvaRunner.Game.prototype = {
             if(this.game.input.activePointer.isDown){
                 this.player.body.velocity.y -= 25;
                 if(!this.jetSound.isPlaying) {
-                    this.jetSound.play('', 0, true, 0.5 * (this.game.global.sfxVol / 10));
+                    if(this.game.global.sfxVol) {
+                        this.jetSound.play('', 0, true, 0.5);
+                    }
                 }
             } else {
                 this.jetSound.stop();
@@ -233,7 +234,9 @@ ZenvaRunner.Game.prototype = {
     },
     coinHit: function(player, coin) {
         this.score++;
-        this.coinSound.play('', 0, false, 0.5 * (this.game.global.sfxVol / 10));
+        if(this.game.global.sfxVol) {
+            this.coinSound.play('', 0, false, 0.5);
+        }
         coin.kill();
         
         var dummyCoin = new Coin(this.game, coin.x, coin.y);
@@ -250,8 +253,10 @@ ZenvaRunner.Game.prototype = {
         
     },
     enemyHit: function(player,enemy) {
-        if(navigator.vibrate) {
-            navigator.vibrate(250);
+        if(!this.playerHit && this.game.global.vibrateOpt) {
+            if(navigator.vibrate) {
+                navigator.vibrate(250);
+            }
         }
         
         if(this.score > 0 && this.playerHit) {
@@ -292,7 +297,9 @@ ZenvaRunner.Game.prototype = {
                 player.kill();
                 enemy.kill();
 
-                this.deathSound.play('', 0, false, 0.5 * (this.game.global.sfxVol / 10));
+                if(this.game.global.sfxVol) {
+                    this.deathSound.play('', 0, false, 0.5);
+                }
                 this.gameMusic.stop();
                 this.jetSound.stop();
 

@@ -27,7 +27,6 @@ Scoreboard.prototype.show = function(score) {
     
     this.y = this.game.height;
     
-    //gameoverText = this.game.add.bitmapText(0, 100, 'minecraftia', 'You Died!', 36);
     gameoverText = this.game.add.text(0, 100, 'You Died!', {
         font: '36px Arial Black',
         fill: '#ffffff',
@@ -36,7 +35,6 @@ Scoreboard.prototype.show = function(score) {
     gameoverText.x = this.game.width / 2 - (gameoverText.width / 2);
     this.add(gameoverText);
     
-    //scoreText = this.game.add.bitmapText(0, 200, 'minecraftia', 'Your Score: ' + score, 24);
     scoreText = this.game.add.text(0, 200, 'Your Score: ' + score, {
         font: '24px Arial Black',
         fill: '#ffffff',
@@ -45,7 +43,6 @@ Scoreboard.prototype.show = function(score) {
     scoreText.x = this.game.width / 2 - (scoreText.width / 2);
     this.add(scoreText);
     
-    //highScoreText = this.game.add.bitmapText(0, 250, 'minecraftia', 'Your High Score: ' + highscore, 24);
     highScoreText = this.game.add.text(0, 250, 'Your High Score: ' + highscore, {
         font: '24px Arial Black',
         fill: '#ffffff',
@@ -54,7 +51,6 @@ Scoreboard.prototype.show = function(score) {
     highScoreText.x = this.game.width / 2 - (highScoreText.width / 2);
     this.add(highScoreText);
     
-    //startText = this.game.add.bitmapText(0, 300, 'minecraftia', 'Tap to play again!', 16);
     startText = this.game.add.text(0, 300, 'Tap to play again!', {
         font: '16px Arial Black',
         fill: '#ffffff',
@@ -64,7 +60,6 @@ Scoreboard.prototype.show = function(score) {
     this.add(startText);
     
     if(isNewHighScore) {
-        //newHighScoreText = this.game.add.bitmapText(0, 100, 'minecraftia', 'New High Score!', 12);
         newHighScoreText = this.game.add.text(0, 100, 'New High Score!', {
             font: '12px Arial Black',
             fill: '#ffffff',

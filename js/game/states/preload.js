@@ -17,6 +17,8 @@ ZenvaRunner.Preload.prototype = {
         this.load.image('background','assets/images/background/layer_1.png');
         this.load.image('foreground','assets/images/background/layer_2.png');
         
+        this.load.image('particle-coin','assets/images/particle-coin.png');
+        
         this.load.spritesheet('coins','assets/images/coins-ps.png', 51, 51, 7);
         this.load.spritesheet('player','assets/images/jetpack-ps.png', 229, 296, 4);
         this.load.spritesheet('missile','assets/images/enemy/enemy.png', 364, 233, 5);
@@ -29,10 +31,10 @@ ZenvaRunner.Preload.prototype = {
              
         this.load.onLoadComplete.add(this.onLoadComplete,this);
         
-        //var gameSettings = JSON.parse(localStorage.getItem('gameSettings') || {"sfxVol": 10, "musicVol": 10});
-        var gameSettings = localStorage.getItem('gameSettings') || {"sfxVol": 10, "musicVol": 10};
-        this.game.global.sfxVol = (gameSettings.sfxVol == null || gameSettings.sfxVol === undefined || gameSettings.sfxVol.length <= 0) ? 10 : gameSettings.sfxVol;
-        this.game.global.musicVol = (gameSettings.musicVol == null || gameSettings.musicVol === undefined || gameSettings.musicVol.length <= 0) ? 10 : gameSettings.musicVol;
+        var gameSettings = JSON.parse(localStorage.getItem('gameSettings')) || {"sfxVol": 1, "musicVol": 1, "vibrate":1};
+        this.game.global.sfxVol = (gameSettings.sfxVol == null || gameSettings.sfxVol === undefined || gameSettings.sfxVol.length <= 0) ? 1 : gameSettings.sfxVol;
+        this.game.global.musicVol = (gameSettings.musicVol == null || gameSettings.musicVol === undefined || gameSettings.musicVol.length <= 0) ? 1 : gameSettings.musicVol;
+        this.game.global.vibrateOpt = (gameSettings.vibrate == null || gameSettings.vibrate === undefined || gameSettings.vibrate.length <= 0) ? 1 : gameSettings.vibrate;
     },
     create: function(){
         
